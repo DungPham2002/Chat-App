@@ -1,17 +1,14 @@
-import express from 'express';
+import express from "express";
+import * as AuthController from "../controllers/auth.controller";
+import { AuthMiddleware } from "../middlewares/auth.middleware";
 
 const route = express.Router();
 
-route.get("/signup", (req, res) => {
-    res.send("Sign up")
-});
+route.post("/register", AuthController.register);
 
-route.get("/login", (req, res) => {
-    res.send("Log in")
-});
+route.post("/login", AuthController.login);
 
-route.get("/logout", (req, res) => {
-    res.send("Log out")
-});
+route.post("/logout", AuthController.logout);
+
 
 export default route;
