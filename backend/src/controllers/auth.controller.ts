@@ -3,6 +3,26 @@ import { LoginDto, RegisterDto } from "../dtos/auth.dto";
 import * as authService from "../services/auth.service";
 import { UpdateProfileDto } from "../dtos/profile.dto";
 
+/**
+ * @swagger
+ * /api/auth/register:
+ *   post:
+ *     summary: Register a new user
+ *     tags: [Auth]
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             $ref: '#/components/schemas/RegisterDto'
+ *     responses:
+ *       201:
+ *         description: User registered successfully
+ *       400:
+ *         description: Validation error
+ *       500:
+ *         description: Server error
+ */
 export const register = async (req: Request, res: Response): Promise<any> => {
   try {
     const dto: RegisterDto = req.body;
@@ -31,6 +51,48 @@ export const register = async (req: Request, res: Response): Promise<any> => {
   }
 };
 
+/**
+ * @swagger
+ * /api/auth/login:
+ *   post:
+ *     summary: User login
+ *     tags: [Auth]
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             $ref: '#/components/schemas/LoginDto'
+ *     responses:
+ *       200:
+ *         description: User logged in successfully
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 message:
+ *                   type: string
+ *                   example: User login successfully
+ *                 user:
+ *                   type: object
+ *                   description: Details of the logged-in user
+ *                 accessToken:
+ *                   type: string
+ *                   description: JWT token for authentication
+ *       400:
+ *         description: Validation error
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 message:
+ *                   type: string
+ *                   example: All fields are required
+ *       500:
+ *         description: Server error
+ */
 export const login = async (req: Request, res: Response): Promise<any> => {
   try {
     const dto: LoginDto = req.body;
@@ -54,6 +116,34 @@ export const login = async (req: Request, res: Response): Promise<any> => {
   }
 };
 
+/**
+ * @swagger
+ * /api/auth/logout:
+ *   post:
+ *     summary: User logout
+ *     tags: [Auth]
+ *     responses:
+ *       200:
+ *         description: User logged out successfully
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 message:
+ *                   type: string
+ *                   example: Logged out successfully
+ *       500:
+ *         description: Server error
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 message:
+ *                   type: string
+ *                   example: An error occurred
+ */
 export const logout = async (req: Request, res: Response): Promise<any> => {
   try {
     res.clearCookie("jwt", {
@@ -68,12 +158,48 @@ export const logout = async (req: Request, res: Response): Promise<any> => {
   }
 };
 
+/**
+ * @swagger
+ * paths:
+ *   /api/auth/update-profile:
+ *     put:
+ *       summary: Update user profile
+ *       description: Update the user's profile information (e.g., full name and avatar)
+ *       tags: [Auth]
+ *       security:
+ *         - BearerAuth: []
+ *       requestBody:
+ *         required: true
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/UpdateProfileDto'
+ *       responses:
+ *         200:
+ *           description: Profile updated successfully
+ *           content:
+ *             application/json:
+ *               schema:
+ *                 type: object
+ *                 properties:
+ *                   data:
+ *                     type: object
+ *                     description: The updated user profile data
+ *         400:
+ *           description: Bad request, invalid data
+ *         401:
+ *           description: Unauthorized, invalid or missing token
+ *         500:
+ *           description: Internal server error
+ */
 export const updateProfile = async (
   req: Request,
   res: Response
 ): Promise<any> => {
   try {
     const dto: UpdateProfileDto = req.body;
+    const data = await authService.updateProfile(req.user.id, { ...dto });
+    return res.status(200).json({ data: data });
   } catch (error: any) {
     res.status(500).json({ message: error.message });
   }

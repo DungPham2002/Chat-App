@@ -10,5 +10,6 @@ route.post("/login", AuthController.login);
 
 route.post("/logout", AuthController.logout);
 
+route.put("/update-profile", AuthMiddleware, AuthController.updateProfile);
 
 export default route;

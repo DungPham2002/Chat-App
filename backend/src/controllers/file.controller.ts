@@ -1,8 +1,49 @@
 import { Request, Response } from "express";
 import fs from "fs";
-import * as fileService from "../services/cloudinary.service";
+import * as fileService from "../services/file.service";
 
-export const uploadImage = async (req: Request, res: Response): Promise<any> => {
+/**
+ * @swagger
+ * paths:
+ *   /api/file/upload-image:
+ *     post:
+ *       summary: Upload an image file
+ *       description: Uploads an image file and returns the upload result.
+ *       tags: [File]
+ *       requestBody:
+ *         required: true
+ *         content:
+ *           multipart/form-data:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 image:
+ *                   type: string
+ *                   format: binary
+ *                   description: The image file to be uploaded.
+ *       responses:
+ *         200:
+ *           description: Image uploaded successfully
+ *           content:
+ *             application/json:
+ *               schema:
+ *                 type: object
+ *                 properties:
+ *                   message:
+ *                     type: string
+ *                     example: "Image uploaded successfully"
+ *                   data:
+ *                     type: object
+ *                     description: The result of the image upload.
+ *         400:
+ *           description: No file uploaded
+ *         500:
+ *           description: Internal server error during image upload
+ */
+export const uploadImage = async (
+  req: Request,
+  res: Response
+): Promise<any> => {
   try {
     if (!req.file) {
       return res.status(400).json({ message: "No file uploaded" });
@@ -25,7 +66,48 @@ export const uploadImage = async (req: Request, res: Response): Promise<any> => 
   }
 };
 
-export const uploadVideo = async (req: Request, res: Response): Promise<any> => {
+/**
+ * @swagger
+ * paths:
+ *   /api/file/upload-video:
+ *     post:
+ *       summary: Upload a video file
+ *       description: Uploads a video file and returns the upload result.
+ *       tags: [File]
+ *       requestBody:
+ *         required: true
+ *         content:
+ *           multipart/form-data:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 video:
+ *                   type: string
+ *                   format: binary
+ *                   description: The video file to be uploaded.
+ *       responses:
+ *         200:
+ *           description: Video uploaded successfully
+ *           content:
+ *             application/json:
+ *               schema:
+ *                 type: object
+ *                 properties:
+ *                   message:
+ *                     type: string
+ *                     example: "Video uploaded successfully"
+ *                   data:
+ *                     type: object
+ *                     description: The result of the video upload.
+ *         400:
+ *           description: No file uploaded
+ *         500:
+ *           description: Internal server error during video upload
+ */
+export const uploadVideo = async (
+  req: Request,
+  res: Response
+): Promise<any> => {
   try {
     if (!req.file) {
       return res.status(400).json({ message: "No file uploaded" });

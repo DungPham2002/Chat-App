@@ -1,15 +1,16 @@
+import { UpdateProfileDto } from "../dtos";
 import { LoginDto, RegisterDto } from "../dtos/auth.dto";
-import UserModal from "../models/user.model";
+import UserModel from "../models/user.model";
 import { ComparePassword, HashPassword } from "../utils/password";
 import jwt from "jsonwebtoken";
 
 export const register = async (dto: RegisterDto) => {
   const { fullName, email, password } = dto;
-  const existingUser = await UserModal.findOne({ email });
+  const existingUser = await UserModel.findOne({ email });
   if (existingUser) {
     throw new Error("User already exists");
   }
-  const user = await UserModal.create({
+  const user = await UserModel.create({
     fullName,
     email,
     password: await HashPassword(password),
@@ -30,7 +31,7 @@ export const register = async (dto: RegisterDto) => {
 
 export const login = async (dto: LoginDto) => {
   const { email, password } = dto;
-  const user = await UserModal.findOne({ email });
+  const user = await UserModel.findOne({ email });
   if (!user) {
     throw new Error("User not exists");
   }
@@ -54,9 +55,9 @@ export const login = async (dto: LoginDto) => {
   };
 };
 
-export const logout = async() => {
-    
-}
+export const updateProfile = async (userId: string, dto: UpdateProfileDto) => {
+  return await UserModel.findByIdAndUpdate(userId, { ...dto }, { new: true });
+};
 
 const generateToken = (payload: object) => {
   return jwt.sign(payload, process.env.JWT_SECRET || "", {

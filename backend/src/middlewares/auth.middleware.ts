@@ -1,6 +1,6 @@
 import { Request, Response } from "express";
 import jwt, { JwtPayload } from "jsonwebtoken";
-import UserModal from "../models/user.model";
+import UserModel from "../models/user.model";
 import { User } from "../types";
 
 export const AuthMiddleware = async (
@@ -24,7 +24,7 @@ export const AuthMiddleware = async (
         .status(401)
         .json({ message: "Unauthorized - Invalid provided!" });
     }
-    const user = await UserModal.findById(
+    const user = await UserModel.findById(
       decoded.id as string
     ).select("-password");
     if (!user) {

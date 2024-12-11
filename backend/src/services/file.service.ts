@@ -1,5 +1,6 @@
-import cloudinary from "../config/cloudinary";
+import cloudinary from "../utils/cloudinary";
 import crypto from "crypto";
+
 
 export const uploadImage = async (filePath: string, folder: string) => {
   try {
@@ -12,7 +13,7 @@ export const uploadImage = async (filePath: string, folder: string) => {
       overwrite: true,
     });
 
-    return result;
+    return result.secure_url;
   } catch (error: any) {
     throw new Error("Upload image to Cloudinary failed: " + error.message);
   }
@@ -28,7 +29,7 @@ export const uploadVideo = async (filePath: string, folder: string) => {
       overwrite: true,
     });
 
-    return result;
+    return result.secure_url;
   } catch (error: any) {
     throw new Error("Upload video to Cloudinary failed: " + error.message);
   }
