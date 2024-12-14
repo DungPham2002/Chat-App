@@ -1,26 +1,68 @@
-import React from 'react';
-import logo from './logo.svg';
-import './App.css';
+import { Navigate, Route, Routes } from "react-router-dom";
+import NavBar from "./components/Navbar";
+import HomePage from "./pages/HomePage";
+import SignUpPage from "./pages/SignUpPage";
+import LogInPage from "./pages/LogInPage";
+import SettingPage from "./pages/SettingPage";
+import ProfilePage from "./pages/ProfilePage";
+import { useAuthStore } from "./store/useAuthStore";
+import {
+  useSelectAuthIsAuthenticated,
+  useSelectAuthUser,
+} from "./store/selector";
+import { Toaster } from "react-hot-toast";
 
-function App() {
+const App = () => {
+  const user = useSelectAuthUser();
+  const isAuthenticated = useSelectAuthIsAuthenticated();
+  console.log(user);
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.tsx</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+    <div>
+      <NavBar></NavBar>
+      <Routes>
+        <Route
+          path="/"
+          element={
+            user ? <HomePage></HomePage> : <Navigate to="/login"></Navigate>
+          }
+        ></Route>
+        <Route
+          path="/signup"
+          element={
+            !isAuthenticated ? <SignUpPage></SignUpPage> : <Navigate to="/"></Navigate>
+          }
+        ></Route>
+        <Route
+          path="/login"
+          element={
+            !isAuthenticated ? <LogInPage></LogInPage> : <Navigate to="/"></Navigate>
+          }
+        ></Route>
+        <Route
+          path="/setting"
+          element={
+            isAuthenticated ? (
+              <SettingPage></SettingPage>
+            ) : (
+              <Navigate to="/login" />
+            )
+          }
+        ></Route>
+        <Route
+          path="/profile"
+          element={
+            isAuthenticated ? (
+              <ProfilePage></ProfilePage>
+            ) : (
+              <Navigate to="/login" />
+            )
+          }
+        ></Route>
+      </Routes>
+
+      <Toaster />
     </div>
   );
-}
+};
 
 export default App;
