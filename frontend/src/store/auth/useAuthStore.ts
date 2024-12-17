@@ -1,13 +1,14 @@
 import { create } from "zustand";
-import { User } from "../types/interfaces/user.interace";
-import { authApi } from "../services";
 import toast from "react-hot-toast";
 import { createJSONStorage, persist } from "zustand/middleware";
+import { User } from "../../types/interfaces/user.interace";
+import { authApi } from "../../services";
 
 export interface IAuthStore {
   isInitialized: boolean;
   isAuthenticated: boolean;
   user: User | null;
+  onlineUsers: string[],
 }
 
 export interface IAuthAction {
@@ -23,7 +24,7 @@ export const useAuthStore = create<IAuthStore & { actions: IAuthAction }>()(
       isInitialized: true,
       isAuthenticated: false,
       user: null,
-
+      onlineUsers: [],
       actions: {
         updateProfile: (user: IAuthStore["user"]) =>
           set({ isAuthenticated: true, user }),

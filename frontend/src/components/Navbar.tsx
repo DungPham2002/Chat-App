@@ -1,6 +1,7 @@
 import { LogOut, MessageSquare, Settings, User } from "lucide-react";
 import { Link } from "react-router-dom";
-import { useSelectAuthActions, useSelectAuthIsAuthenticated } from "../store/selector";
+import { useSelectAuthActions, useSelectAuthIsAuthenticated } from "../store/auth/selector";
+
 
 const NavBar = () => {
   const isAuthenticated = useSelectAuthIsAuthenticated();

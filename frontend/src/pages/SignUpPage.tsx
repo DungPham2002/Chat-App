@@ -1,5 +1,4 @@
 import { useState } from "react";
-import { useSelectAuthActions } from "../store/selector";
 import {
   Eye,
   EyeOff,
@@ -13,6 +12,7 @@ import { Link, Navigate, Route } from "react-router-dom";
 import AuthImagePattern from "../components/AuthImagePattern";
 import toast from "react-hot-toast";
 import { authApi } from "../services";
+import { useSelectAuthActions } from "../store/auth/selector";
 
 const defaultFormValue = {
   fullName: "",

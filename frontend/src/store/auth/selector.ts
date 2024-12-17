@@ -7,3 +7,6 @@ export const useSelectAuthIsAuthenticated = () =>
   useAuthStore((state) => state.isAuthenticated);
 
 export const useSelectAuthUser = () => useAuthStore((state) => state.user);
+
+export const useSelectAuthOnlineUsers = () =>
+  useAuthStore((state) => state.onlineUsers);

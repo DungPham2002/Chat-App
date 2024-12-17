@@ -1,8 +1,8 @@
 import { Camera, Loader2, Mail, User } from "lucide-react";
-import { useSelectAuthActions, useSelectAuthUser } from "../store/selector";
 import { useState } from "react";
 import toast from "react-hot-toast";
 import { authApi, fileApi } from "../services";
+import { useSelectAuthActions, useSelectAuthUser } from "../store/auth/selector";
 
 const ProfilePage = () => {
   const user = useSelectAuthUser();

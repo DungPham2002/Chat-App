@@ -5,13 +5,9 @@ import SignUpPage from "./pages/SignUpPage";
 import LogInPage from "./pages/LogInPage";
 import SettingPage from "./pages/SettingPage";
 import ProfilePage from "./pages/ProfilePage";
-import { useAuthStore } from "./store/useAuthStore";
-import {
-  useSelectAuthIsAuthenticated,
-  useSelectAuthUser,
-} from "./store/selector";
 import { Toaster } from "react-hot-toast";
 import { useThemeStore } from "./store/useThemeStore";
+import { useSelectAuthUser, useSelectAuthIsAuthenticated } from "./store/auth/selector";
 
 const App = () => {
   const user = useSelectAuthUser();
