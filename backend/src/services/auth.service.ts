@@ -56,7 +56,11 @@ export const login = async (dto: LoginDto) => {
 };
 
 export const updateProfile = async (userId: string, dto: UpdateProfileDto) => {
-  return await UserModel.findByIdAndUpdate(userId, { ...dto }, { new: true });
+  return await UserModel.findByIdAndUpdate(
+    userId,
+    { fullName: dto.fullName, avatar: dto.avatar },
+    { new: true }
+  );
 };
 
 const generateToken = (payload: object) => {

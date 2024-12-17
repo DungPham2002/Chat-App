@@ -7,6 +7,7 @@ import fileRoutes from "./routes/file.route";
 import messageRoutes from "./routes/message.route";
 import swaggerUi from "swagger-ui-express";
 import swaggerSpec from "./utils/swagger";
+import cors from "cors";
 
 dotenv.config();
 
@@ -15,6 +16,12 @@ const port = process.env.PORT;
 
 app.use(express.json());
 app.use(cookieParser());
+app.use(
+  cors({
+    origin: "http://localhost:3000",
+    credentials: true,
+  })
+);
 
 app.use("/api-docs", swaggerUi.serve, swaggerUi.setup(swaggerSpec));
 
