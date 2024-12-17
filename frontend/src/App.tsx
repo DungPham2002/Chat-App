@@ -11,13 +11,14 @@ import {
   useSelectAuthUser,
 } from "./store/selector";
 import { Toaster } from "react-hot-toast";
+import { useThemeStore } from "./store/useThemeStore";
 
 const App = () => {
   const user = useSelectAuthUser();
   const isAuthenticated = useSelectAuthIsAuthenticated();
-  console.log(user);
+  const { theme }: any = useThemeStore();
   return (
-    <div>
+    <div data-theme={theme}>
       <NavBar></NavBar>
       <Routes>
         <Route
@@ -29,13 +30,21 @@ const App = () => {
         <Route
           path="/signup"
           element={
-            !isAuthenticated ? <SignUpPage></SignUpPage> : <Navigate to="/"></Navigate>
+            !isAuthenticated ? (
+              <SignUpPage></SignUpPage>
+            ) : (
+              <Navigate to="/"></Navigate>
+            )
           }
         ></Route>
         <Route
           path="/login"
           element={
-            !isAuthenticated ? <LogInPage></LogInPage> : <Navigate to="/"></Navigate>
+            !isAuthenticated ? (
+              <LogInPage></LogInPage>
+            ) : (
+              <Navigate to="/"></Navigate>
+            )
           }
         ></Route>
         <Route

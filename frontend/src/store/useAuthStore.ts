@@ -11,7 +11,7 @@ export interface IAuthStore {
 }
 
 export interface IAuthAction {
-  updateAuthProfile: (user: IAuthStore["user"]) => void;
+  updateProfile: (user: IAuthStore["user"]) => void;
   logout: () => void;
   signup: (data: any) => void;
   login: (data: any) => void;
@@ -20,12 +20,12 @@ export interface IAuthAction {
 export const useAuthStore = create<IAuthStore & { actions: IAuthAction }>()(
   persist(
     (set) => ({
-      isInitialized: false,
+      isInitialized: true,
       isAuthenticated: false,
       user: null,
 
       actions: {
-        updateAuthProfile: (user: IAuthStore["user"]) =>
+        updateProfile: (user: IAuthStore["user"]) =>
           set({ isAuthenticated: true, user }),
         logout: async () => {
           try {
@@ -58,8 +58,7 @@ export const useAuthStore = create<IAuthStore & { actions: IAuthAction }>()(
     {
       name: "auth-storage",
       storage: createJSONStorage(() => localStorage),
-      partialize: ({ isInitialized, isAuthenticated, user }) => ({
-        isInitialized,
+      partialize: ({isAuthenticated, user }) => ({
         isAuthenticated,
         user,
       }),

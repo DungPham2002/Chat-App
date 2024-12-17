@@ -17,4 +17,8 @@ export class AuthApi {
     return result.data;
   };
 
+  updateProfile = async (params?: Record<string, any>) => {
+    const result = await axiosInstance.put("/api/auth/update-profile", params);
+    return result.data;
+  };
 }
