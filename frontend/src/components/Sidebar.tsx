@@ -3,12 +3,24 @@ import SidebarSkeleton from "./skeletons/SidebarSkeleton";
 import { Users } from "lucide-react";
 import { User } from "../types/interfaces/user.interace";
 import { useSelectAuthOnlineUsers } from "../store/auth/selector";
-import { messageApi } from "../services";
+import { authApi, messageApi } from "../services";
+import { Navigate, useNavigate, useParams } from "react-router-dom";
 
 const Sidebar = () => {
+  const param = useParams();
+  const navigate = useNavigate();
   const [showOnlineOnly, setShowOnlineOnly] = useState(false);
   const [isUsersLoading, setIsUsersLoading] = useState(false);
-  const [selectedUser, setSelectedUser] = useState<User | null>(null);
+  const [receiver, setReceiver] = useState<User | null>(null);
+  useEffect(() => {
+    const handleGetReceiver = async () => {
+      const receiver = await authApi.getUserProfile(param?.userId!);
+      setReceiver(receiver);
+    };
+    if (param.userId) {
+      handleGetReceiver();
+    }
+  }, []);
   const [allUsers, setAllUsers] = useState<User[] | []>([]);
   const onlineUsers = useSelectAuthOnlineUsers();
 
@@ -20,7 +32,7 @@ const Sidebar = () => {
     getAllUsers();
   }, []);
   const filteredUsers = showOnlineOnly
-    ? allUsers?.filter((user) => onlineUsers.includes(user.id))
+    ? allUsers?.filter((user) => onlineUsers.includes(user._id))
     : allUsers;
   if (isUsersLoading) return <SidebarSkeleton />;
   return (
@@ -50,13 +62,13 @@ const Sidebar = () => {
         {filteredUsers.length > 0 ? (
           filteredUsers?.map((user) => (
             <button
-              key={user.id}
-              onClick={() => setSelectedUser(user)}
+              key={user._id}
+              onClick={() => navigate(`/${user._id}`)}
               className={`
               w-full p-3 flex items-center gap-3
               hover:bg-base-300 transition-colors
               ${
-                selectedUser && selectedUser?.id === user.id
+                receiver && receiver?._id === user._id
                   ? "bg-base-300 ring-1 ring-base-300"
                   : ""
               }
@@ -71,7 +83,7 @@ const Sidebar = () => {
                   alt={user.fullName}
                   className="size-12 object-cover rounded-full"
                 />
-                {onlineUsers.includes(user.id) && (
+                {onlineUsers.includes(user._id) && (
                   <span
                     className="absolute bottom-0 right-0 size-3 bg-green-500 
                   rounded-full ring-2 ring-zinc-900"
@@ -81,7 +93,7 @@ const Sidebar = () => {
               <div className="hidden lg:block text-left min-w-0">
                 <div className="font-medium truncate">{user.fullName}</div>
                 <div className="text-sm text-zinc-400">
-                  {onlineUsers.includes(user.id) ? "Online" : "Offline"}
+                  {onlineUsers.includes(user._id) ? "Online" : "Offline"}
                 </div>
               </div>
             </button>

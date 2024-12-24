@@ -8,7 +8,7 @@ export interface IAuthStore {
   isInitialized: boolean;
   isAuthenticated: boolean;
   user: User | null;
-  onlineUsers: string[],
+  onlineUsers: string[];
 }
 
 export interface IAuthAction {
@@ -59,7 +59,7 @@ export const useAuthStore = create<IAuthStore & { actions: IAuthAction }>()(
     {
       name: "auth-storage",
       storage: createJSONStorage(() => localStorage),
-      partialize: ({isAuthenticated, user }) => ({
+      partialize: ({ isAuthenticated, user }) => ({
         isAuthenticated,
         user,
       }),

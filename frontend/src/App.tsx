@@ -5,11 +5,33 @@ import SignUpPage from "./pages/SignUpPage";
 import LogInPage from "./pages/LogInPage";
 import SettingPage from "./pages/SettingPage";
 import ProfilePage from "./pages/ProfilePage";
-import { Toaster } from "react-hot-toast";
+import toast, { Toaster } from "react-hot-toast";
 import { useThemeStore } from "./store/useThemeStore";
-import { useSelectAuthUser, useSelectAuthIsAuthenticated } from "./store/auth/selector";
+import {
+  useSelectAuthUser,
+  useSelectAuthIsAuthenticated,
+  useSelectAuthActions,
+} from "./store/auth/selector";
+import { useEffect } from "react";
+import { authApi } from "./services";
 
 const App = () => {
+  const actions = useSelectAuthActions();
+  useEffect(() => {
+    const getProfile = async () => {
+      try {
+        if (isAuthenticated) {
+          const profile = await authApi.getCurrentUser();
+          actions.updateProfile(profile.data);
+        }
+      } catch (error: any) {
+        console.error("Error fetching profile:", error);
+        actions.logout();
+        toast.error("Session expired. Please log in again.");
+      }
+    };
+    getProfile();
+  }, []);
   const user = useSelectAuthUser();
   const isAuthenticated = useSelectAuthIsAuthenticated();
   const { theme }: any = useThemeStore();
@@ -17,6 +39,12 @@ const App = () => {
     <div data-theme={theme}>
       <NavBar></NavBar>
       <Routes>
+        <Route
+          path="/:userId"
+          element={
+            user ? <HomePage></HomePage> : <Navigate to="/login"></Navigate>
+          }
+        ></Route>
         <Route
           path="/"
           element={
