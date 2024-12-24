@@ -12,4 +12,9 @@ route.post("/logout", AuthController.logout);
 
 route.put("/update-profile", AuthMiddleware, AuthController.updateProfile);
 
+route.get("/profile/:userId", AuthMiddleware, AuthController.getUserProfile);
+
+route.get("/profile", AuthMiddleware, AuthController.getCurrentUser);
+
+
 export default route;

@@ -55,6 +55,10 @@ export const login = async (dto: LoginDto) => {
   };
 };
 
+export const getUserProfile = async (userId: string) => {
+  return await UserModel.findById(userId).select('-password')
+}
+
 export const updateProfile = async (userId: string, dto: UpdateProfileDto) => {
   return await UserModel.findByIdAndUpdate(
     userId,

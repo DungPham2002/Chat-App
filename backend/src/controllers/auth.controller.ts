@@ -204,3 +204,142 @@ export const updateProfile = async (
     res.status(500).json({ message: error.message });
   }
 };
+
+/**
+ * @swagger
+ * /api/auth/profile/{userId}:
+ *   get:
+ *     summary: Get user profile
+ *     tags: [Auth]
+ *     parameters:
+ *       - in: path
+ *         name: userId
+ *         required: true
+ *         schema:
+ *           type: string
+ *         description: The ID of the user
+ *     responses:
+ *       200:
+ *         description: User profile retrieved successfully
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 data:
+ *                   type: object
+ *                   description: The user profile data
+ *                   properties:
+ *                     id:
+ *                       type: string
+ *                       description: The user ID
+ *                       example: 12345
+ *                     email:
+ *                       type: string
+ *                       description: The user's email
+ *                       example: user@example.com
+ *                     fullName:
+ *                       type: string
+ *                       description: The user's full name
+ *                       example: John Doe
+ *       404:
+ *         description: User not found
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 message:
+ *                   type: string
+ *                   example: User not found
+ *       500:
+ *         description: Server error
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 message:
+ *                   type: string
+ *                   example: Internal server error
+ */
+export const getUserProfile = async (
+  req: Request,
+  res: Response
+): Promise<any> => {
+  try {
+    const data = await authService.getUserProfile(req.params.userId);
+    if (!data) {
+      return res.status(404).json({ message: "User not found" });
+    }
+    return res.status(200).json({ data: data });
+  } catch (error: any) {
+    res.status(500).json({ message: error.message });
+  }
+};
+
+/**
+ * @swagger
+ * /api/auth/profile:
+ *   get:
+ *     summary: Get current user
+ *     tags: [Auth]
+ *     responses:
+ *       200:
+ *         description: User profile retrieved successfully
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 data:
+ *                   type: object
+ *                   description: The user profile data
+ *                   properties:
+ *                     id:
+ *                       type: string
+ *                       description: The user ID
+ *                       example: 12345
+ *                     email:
+ *                       type: string
+ *                       description: The user's email
+ *                       example: user@example.com
+ *                     fullName:
+ *                       type: string
+ *                       description: The user's full name
+ *                       example: John Doe
+ *       404:
+ *         description: User not found
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 message:
+ *                   type: string
+ *                   example: User not found
+ *       500:
+ *         description: Server error
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 message:
+ *                   type: string
+ *                   example: Internal server error
+ */
+export const getCurrentUser = async (
+  req: Request,
+  res: Response
+): Promise<any> => {
+  try {
+    const data = await authService.getUserProfile(req.user.id);
+    if (!data) {
+      return res.status(404).json({ message: "User not found" });
+    }
+    return res.status(200).json({ data: data });
+  } catch (error: any) {
+    res.status(500).json({ message: error.message });
+  }
+};

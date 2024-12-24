@@ -6,7 +6,7 @@ const router = express.Router();
 
 router.get("/users", AuthMiddleware, MessageController.getUserForSidebar);
 
-router.get("/:id", AuthMiddleware, MessageController.sendMessage);
+router.get("/:id", AuthMiddleware, MessageController.getMessages);
 
 router.post("/send/:id", AuthMiddleware, MessageController.sendMessage);
 
