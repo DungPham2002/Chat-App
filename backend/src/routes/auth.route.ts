@@ -16,5 +16,4 @@ route.get("/profile/:userId", AuthMiddleware, AuthController.getUserProfile);
 
 route.get("/profile", AuthMiddleware, AuthController.getCurrentUser);
 
-
 export default route;

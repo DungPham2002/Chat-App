@@ -8,18 +8,19 @@ import messageRoutes from "./routes/message.route";
 import swaggerUi from "swagger-ui-express";
 import swaggerSpec from "./utils/swagger";
 import cors from "cors";
+import { app, server } from "./utils/socket";
 
 dotenv.config();
 
-const app = express();
 const port = process.env.PORT;
 
 app.use(express.json());
 app.use(cookieParser());
 app.use(
   cors({
-    origin: "http://localhost:3000",
+    origin: process.env.FRONTEND_URL,
     credentials: true,
+    allowedHeaders: ["Content-Type", "Access-Control-Allow-Origin"],
   })
 );
 
@@ -29,7 +30,7 @@ app.use("/api/auth", authRoutes);
 app.use("/api/file", fileRoutes);
 app.use("/api/message", messageRoutes);
 
-app.listen(port, () => {
+server.listen(port, () => {
   console.log(`Server is running at http://localhost:${port}`);
   console.log(`Swagger UI is available at http://localhost:${port}/api-docs`);
   connectDB();
