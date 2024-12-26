@@ -8,7 +8,6 @@ export interface IAuthStore {
   isInitialized: boolean;
   isAuthenticated: boolean;
   user: User | null;
-  onlineUsers: string[];
 }
 
 export interface IAuthAction {
@@ -25,6 +24,7 @@ export const useAuthStore = create<IAuthStore & { actions: IAuthAction }>()(
       isAuthenticated: false,
       user: null,
       onlineUsers: [],
+      socket: null,
       actions: {
         updateProfile: (user: IAuthStore["user"]) =>
           set({ isAuthenticated: true, user }),
@@ -32,6 +32,8 @@ export const useAuthStore = create<IAuthStore & { actions: IAuthAction }>()(
           try {
             await authApi.logout();
             set({ isAuthenticated: false, user: null });
+            localStorage.removeItem("auth-storage");
+
             toast.success("Logged out successfully!");
           } catch (error) {}
         },
@@ -48,7 +50,6 @@ export const useAuthStore = create<IAuthStore & { actions: IAuthAction }>()(
           try {
             const res = await authApi.login(data);
             set({ isAuthenticated: true, user: res.user });
-
             toast.success("Login successfully!");
           } catch (error: any) {
             toast.error(error.response.data.message);

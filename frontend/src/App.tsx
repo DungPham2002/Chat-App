@@ -17,6 +17,7 @@ import { authApi } from "./services";
 
 const App = () => {
   const actions = useSelectAuthActions();
+  const isAuthenticated = useSelectAuthIsAuthenticated();
   useEffect(() => {
     const getProfile = async () => {
       try {
@@ -33,8 +34,8 @@ const App = () => {
     getProfile();
   }, []);
   const user = useSelectAuthUser();
-  const isAuthenticated = useSelectAuthIsAuthenticated();
   const { theme }: any = useThemeStore();
+
   return (
     <div data-theme={theme}>
       <NavBar></NavBar>

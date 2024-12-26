@@ -1,5 +1,6 @@
-import { REACT_APP_API_URL } from "../constants";
+import axios from "axios";
 import { axiosInstance } from "../lib/axios";
+import { API_URL } from "../constants";
 
 export class AuthApi {
   signup = async (params?: Record<string, any>) => {
@@ -7,8 +8,8 @@ export class AuthApi {
     return result.data;
   };
 
-  logout = async (params?: Record<string, any>) => {
-    const result = await axiosInstance.post("/api/auth/logout", params);
+  logout = async () => {
+    const result = await axios.post(API_URL + "/api/auth/logout");
     return result.data;
   };
 

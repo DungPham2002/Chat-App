@@ -1,8 +1,8 @@
 import { X } from "lucide-react";
-import { useSelectAuthOnlineUsers } from "../store/auth/selector";
 import { useNavigate, useParams } from "react-router-dom";
-import { useEffect, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import { User } from "../types/interfaces/user.interace";
+import { SocketContext } from "../contexts/SocketContext";
 
 export interface Props {
   receiver: User;
@@ -12,7 +12,7 @@ const ChatHeader = (props: Props) => {
   const { receiver } = props;
   const navigate = useNavigate();
   const [selectedUser, setSelectedUser] = useState<User | null>();
-  const onlineUsers = useSelectAuthOnlineUsers();
+  const { onlineUsers } = useContext(SocketContext)!;
   useEffect(() => {
     setSelectedUser(receiver);
   }, [receiver]);

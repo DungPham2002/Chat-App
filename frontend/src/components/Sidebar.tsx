@@ -1,10 +1,10 @@
-import { useEffect, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import SidebarSkeleton from "./skeletons/SidebarSkeleton";
 import { Users } from "lucide-react";
 import { User } from "../types/interfaces/user.interace";
-import { useSelectAuthOnlineUsers } from "../store/auth/selector";
 import { authApi, messageApi } from "../services";
 import { Navigate, useNavigate, useParams } from "react-router-dom";
+import { SocketContext } from "../contexts/SocketContext";
 
 const Sidebar = () => {
   const param = useParams();
@@ -22,7 +22,7 @@ const Sidebar = () => {
     }
   }, []);
   const [allUsers, setAllUsers] = useState<User[] | []>([]);
-  const onlineUsers = useSelectAuthOnlineUsers();
+  const { onlineUsers } = useContext(SocketContext)!;
 
   useEffect(() => {
     const getAllUsers = async () => {
