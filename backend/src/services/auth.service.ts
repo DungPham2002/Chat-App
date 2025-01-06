@@ -46,7 +46,7 @@ export const login = async (dto: LoginDto) => {
   const accessToken = generateToken(payload);
   return {
     user: {
-      id: user.id,
+      _id: user.id,
       fullName: user.fullName,
       email: user.email,
       avatar: user.avatar,
@@ -56,8 +56,8 @@ export const login = async (dto: LoginDto) => {
 };
 
 export const getUserProfile = async (userId: string) => {
-  return await UserModel.findById(userId).select('-password')
-}
+  return await UserModel.findById(userId).select("-password");
+};
 
 export const updateProfile = async (userId: string, dto: UpdateProfileDto) => {
   return await UserModel.findByIdAndUpdate(

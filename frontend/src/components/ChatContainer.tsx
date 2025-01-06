@@ -8,6 +8,7 @@ import MessageInput from "./MessageInput";
 import { formatMessageTime } from "../lib/ultils";
 import { User } from "../types/interfaces/user.interace";
 import MessageSkeleton from "./skeletons/MessageSkeleton";
+import { useSocket } from "../contexts/SocketContext";
 
 export interface Props {
   receiver: User;
@@ -15,10 +16,20 @@ export interface Props {
 
 const ChatContainer = (props: Props) => {
   const user = useSelectAuthUser();
+  const { socket } = useSocket();
   const { receiver } = props;
   const [messages, setMessages] = useState<Message[]>([]);
-  const messageEndRef = useRef(null);
+  const messageEndRef = useRef<HTMLDivElement | null>(null);
   const [messageLoading, setMessageLoading] = useState(false);
+  const subscribeToMessages = () => {
+    if (!receiver) return;
+    socket?.on("newMessage", (newMessage) =>
+      setMessages((pre) => [...pre, newMessage])
+    );
+  };
+  const unsubsribeFromMessages = () => {
+    socket?.off("newMessage");
+  };
   useEffect(() => {
     const handleGetMessages = async () => {
       const messages = await messageApi.getMessages(receiver._id);
@@ -27,7 +38,21 @@ const ChatContainer = (props: Props) => {
     setMessageLoading(true);
     handleGetMessages();
     setMessageLoading(false);
-  }, [receiver]);
+    console.log(receiver);
+    if (receiver) {
+      console.log("aaaaaa", socket);
+      subscribeToMessages();
+    }
+    return () => {
+      unsubsribeFromMessages();
+    };
+  }, [receiver, socket]);
+  useEffect(() => {
+    if (messageEndRef.current && messages) {
+      messageEndRef.current.scrollIntoView({ behavior: "smooth" });
+    }
+  }, [messages]);
+
   if (messageLoading) {
     return (
       <div className="flex-1 flex flex-col overflow-auto">
@@ -37,6 +62,7 @@ const ChatContainer = (props: Props) => {
       </div>
     );
   }
+
   return (
     <div className="flex-1 flex flex-col overflow-auto">
       <ChatHeader receiver={receiver} />

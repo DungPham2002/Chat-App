@@ -4,6 +4,7 @@ import { createJSONStorage, persist } from "zustand/middleware";
 import { User } from "../../types/interfaces/user.interace";
 import { authApi } from "../../services";
 
+
 export interface IAuthStore {
   isInitialized: boolean;
   isAuthenticated: boolean;
@@ -24,7 +25,6 @@ export const useAuthStore = create<IAuthStore & { actions: IAuthAction }>()(
       isAuthenticated: false,
       user: null,
       onlineUsers: [],
-      socket: null,
       actions: {
         updateProfile: (user: IAuthStore["user"]) =>
           set({ isAuthenticated: true, user }),
@@ -33,7 +33,6 @@ export const useAuthStore = create<IAuthStore & { actions: IAuthAction }>()(
             await authApi.logout();
             set({ isAuthenticated: false, user: null });
             localStorage.removeItem("auth-storage");
-
             toast.success("Logged out successfully!");
           } catch (error) {}
         },

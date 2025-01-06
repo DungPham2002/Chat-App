@@ -31,9 +31,9 @@ const MessageInput = (props: Props) => {
       return;
     }
 
-    const maxSizeInBytes = 2 * 1024 * 1024;
+    const maxSizeInBytes = 10 * 1024 * 1024;
     if (file.size > maxSizeInBytes) {
-      toast.error("Image must be < 2MB.");
+      toast.error("Image must be < 10MB.");
       return;
     }
     const formData = new FormData();

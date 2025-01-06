@@ -10,26 +10,36 @@ const io = new Server(server, {
     origin: process.env.FRONTEND_URL,
     allowedHeaders: ["Content-Type", "Access-Control-Allow-Origin"],
   },
-  transports: ["websocket"]
+  transports: ["websocket"],
 });
 
 let onlineUsers: any[] = [];
 
+export const getSocketId = (userId: string) => {
+  return onlineUsers
+    .filter((user) => user.userId === userId)
+    .map((user) => user.socketId)[0];
+};
+
 io.on("connection", (socket) => {
   console.log("A user connected", socket.id);
   const userId = socket.handshake.query.userId;
-  if (userId && !onlineUsers.some((onlineUser) => onlineUser.userId === userId))
+  if (
+    userId &&
+    !onlineUsers.some((onlineUser) => onlineUser.userId === userId)
+  ) {
     onlineUsers.push({
-      userId,
+      userId: userId,
       socketId: socket.id,
     });
+  }
   io.emit(
     "getOnlineUsers",
     onlineUsers.map((onlineUser) => onlineUser.userId)
   );
   socket.on("disconnect", () => {
     console.log("A user disconnected", socket.id);
-    onlineUsers.filter((user) => !user.userId);
+    onlineUsers = onlineUsers.filter((user) => user.socketId !== socket.id);
     io.emit(
       "getOnlineUsers",
       onlineUsers.map((onlineUser) => onlineUser.userId)

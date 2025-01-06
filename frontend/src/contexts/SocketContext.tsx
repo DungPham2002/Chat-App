@@ -13,7 +13,6 @@ import { Socket, io } from "socket.io-client";
 
 export interface ISocketContext {
   socket: Socket | null;
-  disconnectSocket: () => void;
   onlineUsers: string[];
 }
 
@@ -29,18 +28,12 @@ export const SocketProvider = ({ children }: SocketProviderProps) => {
   const user = useSelectAuthUser();
   const [socket, setSocket] = useState<Socket | null>(null);
   const [onlineUsers, setOnlineUsers] = useState([]);
-  const disconnectSocket = () => {
-    if (socket) {
-      socket.disconnect();
-      setSocket(null);
-    }
-  };
   useEffect(() => {
     if (user) {
       const newSocket = io(API_URL || "http://localhost:3001", {
         transports: ["websocket"],
         query: {
-          userId: user?._id,
+          userId: user?._id!,
         },
       });
       setSocket(newSocket);
@@ -48,14 +41,15 @@ export const SocketProvider = ({ children }: SocketProviderProps) => {
         newSocket.disconnect();
       };
     }
-  }, []);
+  }, [user]);
   useEffect(() => {
+    if (socket === null) return;
     socket?.on("getOnlineUsers", (res) => {
       setOnlineUsers(res);
     });
   }, [socket]);
   return (
-    <SocketContext.Provider value={{ socket, disconnectSocket, onlineUsers }}>
+    <SocketContext.Provider value={{ socket, onlineUsers }}>
       {children}
     </SocketContext.Provider>
   );

@@ -9,7 +9,7 @@ import { useSocket } from "../contexts/SocketContext";
 const NavBar = () => {
   const isAuthenticated = useSelectAuthIsAuthenticated();
   const { logout } = useSelectAuthActions();
-  const socket = useSocket();
+  const { socket } = useSocket();
 
   return (
     <header className="bg-base-100 border-b border-base-300 fixed w-full top-0 z-40 backdrop-blur-lg bg-base-100/80">
@@ -42,8 +42,8 @@ const NavBar = () => {
                 <button
                   className="flex gap-2 items-center"
                   onClick={() => {
+                    socket?.disconnect();
                     logout();
-                    socket.disconnectSocket();
                   }}
                 >
                   <LogOut className="size-5" />

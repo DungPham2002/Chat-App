@@ -2,6 +2,7 @@ import { ObjectId } from "mongoose";
 import UserModel from "../models/user.model";
 import MessageModel from "../models/message.model";
 import { GetMessagesDto, SendMessageDto } from "../dtos";
+import { getSocketId, io } from "../utils/socket";
 
 export const getUserForSidebar = async (userId: ObjectId) => {
   const currentUser = userId;
@@ -29,5 +30,10 @@ export const sendMessage = async (dto: SendMessageDto) => {
   const newMessage = await MessageModel.create({
     ...dto,
   });
+  const receiverSocketId = getSocketId(dto.receiverId);
+  const senderSocketId = getSocketId(dto.senderId);
+  if (receiverSocketId && senderSocketId) {
+    io.to([receiverSocketId, senderSocketId]).emit("newMessage", newMessage);
+  }
   return newMessage;
 };
